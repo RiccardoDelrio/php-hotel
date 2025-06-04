@@ -43,6 +43,10 @@ if (isset($_GET["parking"]) && $_GET["parking"] == "on") {
     echo "parcheggi richiesti";
     $parking_requested = true;
 }
+$vote_minimum = 0;
+if (isset($_GET["vote"]) && is_numeric($_GET["vote"]) && $_GET["vote"] > 0 && $_GET["vote"] <= 5) {
+    $vote_minimum = (int) $_GET["vote"];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,16 +65,20 @@ if (isset($_GET["parking"]) && $_GET["parking"] == "on") {
         <h1> Hotels</h1>
         <hr>
         <h4>Filtri</h4>
-        <form action="" class="form-check">
-            <input class="form-check-input" type="checkbox" name="parking" id="parking" />
-            <label class="form-check-label" for="parking"> Parcheggio </label>
+        <form action="" method="get" class="form-check">
+            <div class="form-control">
+
+                <input type="checkbox" name="parking" id="parking" />
+                <label for="parking"> Parcheggio </label>
+            </div>
+            <div class="form-control">
+                <input class="form-input" type="number" name="vote" id="vote" min="1" max="5" />
+                <label class="form-label" for="vote"> Voto </label>
+            </div>
+
             <button>Filtra</button>
         </form>
-        <div class="form-check">
-            <hr>
-
-
-        </div>
+        <hr>
 
         <table class="table table-striped mt-4">
             <thead>
@@ -88,7 +96,12 @@ if (isset($_GET["parking"]) && $_GET["parking"] == "on") {
                         if (!$hotel["parking"]) {
                             continue;
                         }
-                    } ?>
+                    }
+                    if ($hotel["vote"] < $vote_minimum) {
+                        continue;
+                    }
+
+                    ?>
 
                     <tr>
                         <td><?php echo $hotel['name']; ?></td>
