@@ -38,7 +38,11 @@ $hotels = [
     ],
 
 ];
-
+$parking_requested = false;
+if (isset($_GET["parking"]) && $_GET["parking"] == "on") {
+    echo "parcheggi richiesti";
+    $parking_requested = true;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,18 +57,49 @@ $hotels = [
 </head>
 
 <body>
-    <?php
-    foreach ($hotels as $hotel) {
+    <div class="container pt-3">
+        <h1> Hotels</h1>
+        <hr>
+        <h4>Filtri</h4>
+        <form action="" class="form-check">
+            <input class="form-check-input" type="checkbox" name="parking" id="parking" />
+            <label class="form-check-label" for="parking"> Parcheggio </label>
+            <button>Filtra</button>
+        </form>
+        <div class="form-check">
+            <hr>
 
-        foreach ($hotel as $key => $value) {
-            echo '' . $key . ' ' . $value . " <br>";
 
+        </div>
 
-        }
-    }
-    ?>
+        <table class="table table-striped mt-4">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Descrizione</th>
+                    <th>Parcheggio</th>
+                    <th>Voto</th>
+                    <th>Distanza dal centro (km)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($hotels as $hotel) { ?>
+                    <?php if ($parking_requested) {
+                        if (!$hotel["parking"]) {
+                            continue;
+                        }
+                    } ?>
 
-
+                    <tr>
+                        <td><?php echo $hotel['name']; ?></td>
+                        <td><?php echo $hotel['description']; ?></td>
+                        <td><?php echo $hotel['parking'] ? 'Si' : 'No'; ?></td>
+                        <td><?php echo $hotel['vote']; ?></td>
+                        <td><?php echo $hotel['distance_to_center']; ?></td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
 </body>
 
 </html>
